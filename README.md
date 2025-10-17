@@ -1,6 +1,6 @@
 # Эмулятор командной строки с VFS
 
-## Этап 1: REPL прототип
+## Этап 1: REPL
 
 ### Реализованная функциональность
 
@@ -80,5 +80,123 @@ project/
 └── README.md          # Документация
 ```
 
-**Этап 1 завершен!**
+## Этап 2: Конфигурация
 
+### Реализованная функциональность
+
+#### ✅ Параметры командной строки
+- `--vfs-path` - путь к физическому расположению VFS (обязательный)
+- `--log-file` - путь к лог-файлу (обязательный) 
+- `--startup-script` - путь к стартовому скрипту (опциональный)
+
+#### ✅ Логирование в CSV формате
+- Запись всех событий в CSV файл с колонками:
+  - `timestamp` - временная метка
+  - `username` - имя пользователя ОС
+  - `command` - выполненная команда
+  - `arguments` - аргументы команды
+  - `error_message` - сообщение об ошибке (если есть)
+
+#### ✅ Стартовые скрипты
+- Поддержка комментариев (символ `#`)
+- Имитация диалога с пользователем (отображение ввода и вывода)
+- Обработка ошибок выполнения скрипта
+- Команда `run` для выполнения скриптов в интерактивном режиме
+
+#### ✅ Система тестирования
+- Набор bat-скриптов для Windows
+- Тестирование всех параметров командной строки
+- Автоматическое создание необходимых директорий
+
+### Использование
+
+#### Базовый запуск:
+```bash
+python shell_emulator.py --vfs-path ./my_vfs --log-file ./logs/shell.log
+```
+
+#### Запуск со стартовым скриптом:
+```bash
+python shell_emulator.py --vfs-path ./my_vfs --log-file ./logs/shell.log --startup-script ./scripts/startup.txt
+```
+
+#### Просмотр справки:
+```bash
+python shell_emulator.py --help
+```
+
+### Примеры
+
+#### Пример лог-файла (shell.log):
+```csv
+timestamp,username,command,arguments,error_message
+2024-01-15 10:30:15,Admin,SYSTEM_START,"VFS: ./my_vfs, Script: None",
+2024-01-15 10:30:20,Admin,ls,-la,
+2024-01-15 10:30:25,Admin,echo,"Привет, $USERNAME!",
+2024-01-15 10:30:30,Admin,unknown_cmd,,unknown_cmd: команда не найдена
+2024-01-15 10:30:35,Admin,exit,,
+```
+
+#### Пример стартового скрипта (startup.txt):
+```bash
+# Стартовый скрипт для эмулятора VFS
+echo "=== Запуск эмулятора ==="
+echo "Пользователь: $USERNAME"
+env
+ls -la
+echo "=== Готов к работе ==="
+```
+
+#### Пример сессии со стартовым скриптом:
+```bash
+$ python shell_emulator.py --vfs-path ./vfs --log-file ./logs/session.log --startup-script ./scripts/demo.txt
+
+ПАРАМЕТРЫ ЗАПУСКА ЭМУЛЯТОРА:
+  VFS путь: ./vfs
+  Лог-файл: ./logs/session.log
+  Стартовый скрипт: ./scripts/demo.txt
+
+Выполнение стартового скрипта...
+
+=== Выполнение скрипта: ./scripts/demo.txt ===
+# Демонстрационный скрипт
+myvfs:/$ echo "Привет, $USERNAME!"
+Привет, Admin!
+myvfs:/$ ls -la
+file1.txt  file2.txt  documents/
+myvfs:/$ env
+Переменные окружения:
+  HOME: C:/Users/Admin
+  USERNAME: Admin
+----------------------------------------
+myvfs:/$ 
+```
+
+### Структура проекта после Этапа 2
+```
+project/
+├── shell_emulator.py      # Основной файл выполнения
+├── Shell_emulator.py      # Файл эмулятора
+├── Logger.py              # Класс для логирования событий
+├── scripts/               # Тестовые скрипты
+│   ├── test_basic.bat
+│   ├── test_with_script.bat
+│   ├── test_different_paths.bat
+│   ├── test_error_cases.bat
+│   ├── run_all_tests.bat
+│   └── demo_script.txt
+├── logs/                  # Директория для логов
+├── test_vfs/             # Тестовые VFS директории
+├── test_vfs2/
+└── README.md
+```
+
+### Запуск тестов
+```bash
+# Запуск всех тестов (из командной строки cmd)
+scripts\run_all_tests.bat
+
+# Или запуск отдельных тестов
+scripts\test_basic.bat
+scripts\test_with_script.bat
+```
