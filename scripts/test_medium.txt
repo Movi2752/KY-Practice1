@@ -1,0 +1,13 @@
+# Тест VFS с несколькими файлами
+echo "=== Тестирование VFS среднего размера ==="
+pwd
+ls
+cd home/user
+ls
+cd documents
+ls
+cd ../code
+ls
+cd ../../../
+ls var/
+echo "=== Тест завершен ==="

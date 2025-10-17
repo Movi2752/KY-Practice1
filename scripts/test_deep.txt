@@ -1,0 +1,13 @@
+# Тест глубокой структуры VFS
+echo "=== Тестирование глубокой структуры VFS ==="
+pwd
+ls
+cd apps/web/frontend/components
+ls
+cd ../../../../data/database/tables
+ls
+cd ../../../../users/alice/projects/vfs_emulator
+ls
+cd ../../../../../
+pwd
+echo "=== Тест завершен ==="
